@@ -24,8 +24,9 @@ The repository features complete filter synthesis in **MATLAB**, bit-exact fixed
 - [7. RTL Implementation & ModelSim Simulation](#7-rtl-implementation--modelsim-simulation)
 - [8. Hardware Audio Verification Platform](#8-hardware-audio-verification-platform)
   - [8.1 System Overview](#81-system-overview)
-  - [8.2 Spectral & Time-Domain Analysis](#82-spectral--time-domain-analysis)
-  - [8.3 Quantitative Verification Report](#83-quantitative-verification-report)
+  - [8.2 Interactive GUI Application Walkthrough](#82-interactive-gui-application-walkthrough)
+  - [8.3 High-Resolution DSP Verification Plots](#83-high-resolution-dsp-verification-plots)
+  - [8.4 Quantitative Verification Report](#84-quantitative-verification-report)
 - [9. How to Run](#9-how-to-run)
   - [9.1 Prerequisites](#91-prerequisites)
   - [9.2 RTL Simulation (ModelSim)](#92-rtl-simulation-modelsim)
@@ -269,14 +270,38 @@ The testbench (`tb/fir_filter_tb.v`) executes three verification cases (1024 sam
 ## 8. Hardware Audio Verification Platform
 
 ### 8.1 System Overview
-To validate the filter in real-world conditions, a custom **Hardware-in-the-Loop Audio Verification Platform** (`Audio_Test_Tool`) was built:
-1. **Audio Ingestion**: Loads real mono audio sampled at $48\text{ kHz}$.
-2. **Noise Engine**: Injects customizable high-frequency stopband noise (18 kHz tone, dual 12 kHz + 18 kHz tones, or Additive White Gaussian Noise).
+To validate the filter in real-world conditions, a custom **Hardware-in-the-Loop Audio Verification Platform** (`Audio_Test_Tool`) was developed:
+1. **Audio Ingestion & Microphone**: Supports live microphone voice capture, synthetic multi-tone test signals, or arbitrary 48 kHz WAV files.
+2. **Configurable Noise Engine**: Injects customizable high-frequency stopband noise (18 kHz tone, dual 12 kHz + 18 kHz tones, or Additive White Gaussian Noise).
 3. **Q1.15 Quantizer**: Converts continuous floating-point audio into two's complement hexadecimal stimulus (`input.hex`).
-4. **Hardware Simulation**: Drives ModelSim in headless batch mode using `tb/fir_audio_tb.v`, streaming thousands of real audio samples through the RTL DUT.
+4. **Hardware Co-Simulation**: Automatically triggers ModelSim in batch mode using `tb/fir_audio_tb.v`, streaming hundreds of thousands of samples through the RTL DUT.
 5. **RTL Decoding & Analysis**: Reconstructs the DUT output (`filtered.hex`) into standard 16-bit PCM WAV audio and computes FFT spectra, SNR, and RMS metrics.
 
-### 8.2 Spectral & Time-Domain Analysis
+---
+
+### 8.2 Interactive GUI Application Walkthrough
+
+The platform features a modern dark-mode GUI (`run_gui.bat` / `gui_app.py`) providing full visibility into the DSP filtering process:
+
+#### 1. Frequency Spectrum Tab (3 Dedicated Windows)
+Displays synchronized FFT magnitude spectra across three dedicated panes: Clean Voice Input, Noise-Injected Signal, and RTL Filtered Output (achieving $\ge 50\text{ dB}$ stopband attenuation).
+![GUI Frequency Spectrum](docs/images/gui_main_spectrum.png)
+
+#### 2. Time-Domain Waveforms Tab (Interactive Playhead)
+Visualizes raw audio waveforms across the full track duration ($9.3\text{ seconds}$), highlighting the complete removal of high-frequency noise spikes by the hardware filter.
+![GUI Time Domain Waveforms](docs/images/gui_time_domain_waveforms.png)
+
+#### 3. Individual Audio & Hardware Verification Reports
+Side-by-side technical breakdown of dynamic range, crest factor, RMS levels, and bit-exact RTL verification status.
+![GUI Audio Reports](docs/images/gui_audio_reports.png)
+
+#### 4. ModelSim Live Console Stream & Co-Simulation
+Streams ModelSim execution logs in real time as the RTL DUT processes all 446,400 samples with **0 hardware mismatches**.
+![GUI ModelSim Live Stream](docs/images/gui_modelsim_live_stream.png)
+
+---
+
+### 8.3 High-Resolution DSP Verification Plots
 
 #### Frequency Spectrum Comparison (Clean vs. Noisy vs. RTL Filtered)
 The stopband interference at 18 kHz is attenuated by $> 55\text{ dB}$, while the speech and audio spectrum below 4 kHz is preserved intact:
@@ -286,7 +311,9 @@ The stopband interference at 18 kHz is attenuated by $> 55\text{ dB}$, while the
 The severe high-frequency oscillation injected into the input signal is completely eliminated by the RTL hardware filter:
 ![Time-Domain Waveform](docs/images/audio_time_domain.png)
 
-### 8.3 Quantitative Verification Report
+---
+
+### 8.4 Quantitative Verification Report
 
 Tested over **446,400 real audio samples** ($9.3\text{ seconds}$ at $48\text{ kHz}$):
 

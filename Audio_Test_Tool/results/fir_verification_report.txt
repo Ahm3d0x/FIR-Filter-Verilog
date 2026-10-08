@@ -1,0 +1,37 @@
+====================================================================
+       16-TAP DIRECT-FORM FIR FILTER - AUDIO VERIFICATION REPORT
+====================================================================
+
+--------------------------------------------------------------------
+ [STAGE 1] ORIGINAL AUDIO (CLEAN INPUT)
+--------------------------------------------------------------------
+  - Duration              : 9.30 seconds
+  - Sample Count          : 446,400 samples @ 48 kHz
+  - Peak Amplitude        : 0.9000
+  - RMS Power Level       : 0.2046
+  - Dynamic Range         : 12.87 dB
+  - Crest Factor          : 4.40
+
+--------------------------------------------------------------------
+ [STAGE 2] NOISY AUDIO (WITH STOPBAND INTERFERENCE)
+--------------------------------------------------------------------
+  - Noise Configuration   : Dual Stopband Tones @ 12 kHz + 18 kHz
+  - Peak Amplitude        : 0.9600
+  - RMS Power Level       : 0.2212
+  - Dominant Noise Peak   : 12000 Hz (-22.2 dBFS)
+
+--------------------------------------------------------------------
+ [STAGE 3] RTL FILTERED AUDIO (HARDWARE DUT OUTPUT)
+--------------------------------------------------------------------
+  - Total Samples Tested  : 446,400
+  - Hardware Mismatches   : 0
+  - Golden Model Match    : 100.00% (PASS)
+  - Filtered Output RMS   : 0.1599
+  - Reconstruction SNR    : 11.12 dB
+  - Max Stopband Residual : -77.5 dBFS (Target <= -50 dB)
+
+--------------------------------------------------------------------
+ [FINAL VERDICT]:
+  - Hardware Execution   : PASS (Bit-true sample-by-sample match)
+  - Noise Filtering      : SUCCESS (Stopband attenuation verified)
+====================================================================

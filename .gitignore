@@ -1,0 +1,34 @@
+# Virtual Environment
+.venv/
+env/
+venv/
+ENV/
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+
+# ModelSim / QuestaSim generated files
+sim/work/
+sim/transcript
+sim/vsim.wlf
+sim/*.wlf
+*.wlf
+transcript
+*.asdb
+
+# MATLAB generated files
+matlab/*.mat
+matlab/*.csv
+matlab/*.txt
+
+# Large generated test exports
+Audio_Test_Tool/output/exports/*.csv
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
